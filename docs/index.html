@@ -414,7 +414,8 @@ function render(){
   $('t-title').textContent=T.title;$('t-intro').textContent=T.intro;$('t-lang').textContent=T.lang;$('t-foot').innerHTML=T.foot;
   $('tintOn').textContent=T.tintOn;$('tintOff').textContent=T.tintOff;$('tintg').setAttribute('aria-label',T.drawing);J.setAttribute('aria-label',T.monsters);
   buildMetric();legend();J.innerHTML='';G.innerHTML='';
-  DATA.forEach(m=>{J.append(el('a',{href:'#m'+m.id},MN(m)));G.append(card(m))});
+  [...DATA].sort((a,b)=>MN(a).localeCompare(MN(b),LOCALE[lang])).forEach(m=>J.append(el('a',{href:'#m'+m.id},MN(m))));
+  DATA.forEach(m=>G.append(card(m)));
   hlZone={};paintAll();
 }
 const LS=document.getElementById('lang');
