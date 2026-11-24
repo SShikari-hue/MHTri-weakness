@@ -25,7 +25,7 @@
   --fire:#f06a4b; --water:#5aa1ea; --thunder:#e9bd32; --ice:#6ccbe3; --dragon:#a27ee0; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
-.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.wrap{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 header h1{font:800 clamp(2.2rem,6vw,3.6rem)/1 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
 header p{margin:.4rem 0 0;color:var(--muted);max-width:68ch}
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -82,8 +82,17 @@ th .dot{margin-right:3px}
 .alt{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
 .alt .seg{display:flex;gap:4px}
 footer{color:var(--muted);font-size:.85rem;max-width:80ch;display:flex;flex-direction:column;gap:6px}
-.extra{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;border-top:1px solid var(--line);padding-top:14px}
-@media (max-width:860px){.extra{grid-template-columns:1fr}}
+.extra{grid-column:1/-1;border-top:1px solid var(--line);padding-top:14px}
+.wt{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-start}
+.wt .weak{flex:1 1 260px;min-width:0}
+.traps{flex:0 1 auto;min-width:0}
+.traps h3{font:700 .78rem var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.traps table{width:auto}
+.traps th,.traps td{padding:2px 5px;font-size:.76rem}
+.traps th{font-size:.62rem;letter-spacing:.04em}
+.traps th.g{border-bottom:1px solid var(--line);padding-bottom:3px}
+.traps th.g img{width:30px;height:30px;image-rendering:pixelated;display:block;margin:0 auto}
+.traps .none{color:var(--muted);font-size:.85rem;margin:0;max-width:26ch}
 .extra h3{font:700 .78rem var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
 .extra td{font-size:.8rem}
 .extra td .k{display:block}
@@ -140,7 +149,7 @@ it:{doc:'Hitzone di Monster Hunter Tri',title:'Hitzone di Monster Hunter Tri',la
  zone:'Zona',ko:'KO',weak:'Debolezze elementali (zona migliore)',of4:n=>`${n} su 4`,immune:'immune',
  ailH:'Stati alterati',ailCols:['Stato','Durata','Soglia','+ogni volta','Max','Calo'],ailNone:'Immune a tutti gli stati: il gioco non ha tabelle per questo mostro.',
  stun:'Stordimento',exhaust:'Sfinimento',poisonDmg:(t,d,p)=>`${t} danni (${d} ogni ${p})`,rank:'× rango',
- trapH:'Durata trappole',trapNone:'Nessuna tabella delle trappole nei dati: non si può catturare.',pit:'Fossa',shock:'Shock',
+ trapH:'Durata trappole (secondi)',trapNone:'Nessuna tabella delle trappole nei dati: non si può catturare.',pit:'Fossa',shock:'Shock',
  normal:'Normale',rage:'Furia',tired:'Sfinito',capture:'Cattura',ord:(n,last)=>`${n}ª${last?'+':''}`,
  hp:'HP base',zones:'Zone',hitbox:'Hitbox',artAria:n=>`Disegno di ${n} con le zone colorate`,
  hbMap:'Mappa delle hitbox',side:'Di lato',top:'Dall\'alto',viewAria:(n,v)=>`${n}, vista ${v==='side'?'laterale':'dall\'alto'}`,state:'Stato',
@@ -156,7 +165,7 @@ en:{doc:'Monster Hunter Tri Hitzones',title:'Monster Hunter Tri Hitzones',lang:'
  zone:'Zone',ko:'KO',weak:'Elemental weaknesses (best zone)',of4:n=>`${n} of 4`,immune:'immune',
  ailH:'Status ailments',ailCols:['Status','Duration','Threshold','+each time','Max','Decay'],ailNone:'Immune to all ailments: the game has no tables for this monster.',
  stun:'Stun',exhaust:'Exhaust',poisonDmg:(t,d,p)=>`${t} damage (${d} every ${p})`,rank:'× rank',
- trapH:'Trap duration',trapNone:'No trap table in the data: it cannot be captured.',pit:'Pitfall',shock:'Shock',
+ trapH:'Trap duration (seconds)',trapNone:'No trap table in the data: it cannot be captured.',pit:'Pitfall',shock:'Shock',
  normal:'Normal',rage:'Enraged',tired:'Exhausted',capture:'Capture',ord:(n,last)=>`#${n}${last?'+':''}`,
  hp:'Base HP',zones:'Zones',hitbox:'Hitboxes',artAria:n=>`Drawing of ${n} with colored zones`,
  hbMap:'Hitbox map',side:'Side',top:'Top',viewAria:(n,v)=>`${n}, ${v==='side'?'side':'top'} view`,state:'State',
@@ -172,7 +181,7 @@ fr:{doc:'Zones de dégâts de Monster Hunter Tri',title:'Zones de dégâts de Mo
  zone:'Zone',ko:'KO',weak:'Faiblesses élémentaires (meilleure zone)',of4:n=>`${n} sur 4`,immune:'immunisé',
  ailH:'Altérations d\'état',ailCols:['État','Durée','Seuil','+à chaque fois','Max','Baisse'],ailNone:'Immunisé contre toutes les altérations : le jeu n\'a pas de tables pour ce monstre.',
  stun:'Étourdissement',exhaust:'Épuisement',poisonDmg:(t,d,p)=>`${t} dégâts (${d} toutes les ${p})`,rank:'× rang',
- trapH:'Durée des pièges',trapNone:'Aucune table de pièges dans les données : il ne peut pas être capturé.',pit:'Fosse',shock:'Choc',
+ trapH:'Durée des pièges (secondes)',trapNone:'Aucune table de pièges dans les données : il ne peut pas être capturé.',pit:'Fosse',shock:'Choc',
  normal:'Normal',rage:'Enragé',tired:'Épuisé',capture:'Capture',ord:(n,last)=>`${n}${n===1?'re':'e'}${last?'+':''}`,
  hp:'PV de base',zones:'Zones',hitbox:'Hitbox',artAria:n=>`Dessin de ${n} avec les zones colorées`,
  hbMap:'Carte des hitbox',side:'De côté',top:'De dessus',viewAria:(n,v)=>`${n}, vue ${v==='side'?'de côté':'de dessus'}`,state:'État',
@@ -188,7 +197,7 @@ es:{doc:'Zonas de impacto de Monster Hunter Tri',title:'Zonas de impacto de Mons
  zone:'Zona',ko:'KO',weak:'Debilidades elementales (mejor zona)',of4:n=>`${n} de 4`,immune:'inmune',
  ailH:'Estados alterados',ailCols:['Estado','Duración','Umbral','+cada vez','Máx','Descenso'],ailNone:'Inmune a todos los estados: el juego no tiene tablas para este monstruo.',
  stun:'Aturdimiento',exhaust:'Agotamiento',poisonDmg:(t,d,p)=>`${t} de daño (${d} cada ${p})`,rank:'× rango',
- trapH:'Duración de trampas',trapNone:'No hay tabla de trampas en los datos: no se puede capturar.',pit:'Escollo',shock:'Choque',
+ trapH:'Duración de trampas (segundos)',trapNone:'No hay tabla de trampas en los datos: no se puede capturar.',pit:'Escollo',shock:'Choque',
  normal:'Normal',rage:'Furia',tired:'Agotado',capture:'Captura',ord:(n,last)=>`${n}.ª${last?'+':''}`,
  hp:'PV base',zones:'Zonas',hitbox:'Hitbox',artAria:n=>`Dibujo de ${n} con las zonas coloreadas`,
  hbMap:'Mapa de hitbox',side:'De lado',top:'Desde arriba',viewAria:(n,v)=>`${n}, vista ${v==='side'?'lateral':'superior'}`,state:'Estado',
@@ -204,7 +213,7 @@ de:{doc:'Trefferzonen von Monster Hunter Tri',title:'Trefferzonen von Monster Hu
  zone:'Zone',ko:'KO',weak:'Elementschwächen (beste Zone)',of4:n=>`${n} von 4`,immune:'immun',
  ailH:'Statusveränderungen',ailCols:['Status','Dauer','Schwelle','+jedes Mal','Max','Abbau'],ailNone:'Gegen alle Statusveränderungen immun: Das Spiel hat für dieses Monster keine Tabellen.',
  stun:'Betäubung',exhaust:'Erschöpfung',poisonDmg:(t,d,p)=>`${t} Schaden (${d} alle ${p})`,rank:'× Rang',
- trapH:'Fallendauer',trapNone:'Keine Fallentabelle in den Daten: Es kann nicht gefangen werden.',pit:'Fallgrube',shock:'Schock',
+ trapH:'Fallendauer (Sekunden)',trapNone:'Keine Fallentabelle in den Daten: Es kann nicht gefangen werden.',pit:'Fallgrube',shock:'Schock',
  normal:'Normal',rage:'Wütend',tired:'Erschöpft',capture:'Fang',ord:(n,last)=>`${n}.${last?'+':''}`,
  hp:'Basis-LP',zones:'Zonen',hitbox:'Hitboxen',artAria:n=>`Zeichnung von ${n} mit farbigen Zonen`,
  hbMap:'Hitbox-Karte',side:'Seitlich',top:'Von oben',viewAria:(n,v)=>`${n}, Ansicht ${v==='side'?'seitlich':'von oben'}`,state:'Zustand',
@@ -242,6 +251,7 @@ const ALT={
  24:{it:['Stato 2','Tabelle alternative dello stato 2 di Alatreon.'],en:['State 2','Alternate tables for Alatreon\'s state 2.'],fr:['État 2','Tables alternatives de l\'état 2 d\'Alatreon.'],es:['Estado 2','Tablas alternativas del estado 2 de Alatreon.'],de:['Zustand 2','Alternative Tabellen für Alatreons Zustand 2.']}};
 const LOCALE={it:'it-IT',en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE'};
 
+const TRAPICON={"pit": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAMAAACf4xmcAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAABIUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE2MYFulcRwyImKyemm/gzFZPUZ/VxUmGiM/Kz9yTjhlRQ4ZESpMNFSYaAcMCGiKBJAAAAAIdFJOUwARRDNm7ohVUWytugAAAAd0SU1FB+oLGBUYCuFVzPkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMTEtMjRUMjE6MjQ6MTArMDA6MDBtMF8hAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTExLTI0VDIxOjI0OjEwKzAwOjAwHG3nnQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0xMS0yNFQyMToyNDoxMCswMDowMEt4xkIAAAGtSURBVDjLtZTbktwgDER926SNEOJim///05SEvWM8k+QhlX4C1UFSC5th+F8aJ9No63mapnn8BOHUMAznenlws0VX55xboRR5Zhce3IwgBLDKYRgRPRMJJ0wd9uU4A8U4xRJvQFo9fjyxAmz+hWkTO0eMHXYoBuedN4zcDoA4YO6wrEXBBGIMxklFYsHPzkJi9t5zRFSsGYfw+sKmZVlQ12ZzbUWbDg5YlqW53VKK2u4pwoyacjJHCTGlzbCYJUCrqjxVYDtYos7HRwTJ8cJ0GK1qqZZFqc3zuqH0WCVLloDq2Ww71iE9MMTvbDg4GuXoHducpQsV4mLddZfjO3aZyJlZxKYT8cC0VLvRmwKAescyabrSU6uepXzDJNnUu3S+Widyx/J1Oy+1SO4wHad2Il1FIEqPlRau6eAU4+HObXlgzQRQHVct1XaUH5iEdj7ZV5w9bXomyB0LpYjsxu1mJnn2QN1FSikXptMIegqdtIqmpisbGSa50AuiYs60v+/ekmEiOezJtAdrWArS3QK16Lvo4fT3OrFtD3/U3n6Zzt7XJ7WHbf6LPjyG/6ZfMEoyUr/XAMgAAAAASUVORK5CYII=", "shock": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAMAAACf4xmcAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAABIUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI93mamNtTQrN7aYw8Oj0VtMYYJsiycgKUE2RXVhfWhWbxoVG05BU5yCpw0KDffayRgAAAAIdFJOUwARRDNm7ohVUWytugAAAAd0SU1FB+oLGBUYCuFVzPkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMTEtMjRUMjE6MjQ6MTArMDA6MDBtMF8hAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTExLTI0VDIxOjI0OjEwKzAwOjAwHG3nnQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0xMS0yNFQyMToyNDoxMCswMDowMEt4xkIAAAGtSURBVDjLtZTbktwgDER926SNEOJim///05SEvWM8k+QhlX4C1UFSC5th+F8aJ9No63mapnn8BOHUMAznenlws0VX55xboRR5Zhce3IwgBLDKYRgRPRMJJ0wd9uU4A8U4xRJvQFo9fjyxAmz+hWkTO0eMHXYoBuedN4zcDoA4YO6wrEXBBGIMxklFYsHPzkJi9t5zRFSsGYfw+sKmZVlQ12ZzbUWbDg5YlqW53VKK2u4pwoyacjJHCTGlzbCYJUCrqjxVYDtYos7HRwTJ8cJ0GK1qqZZFqc3zuqH0WCVLloDq2Ww71iE9MMTvbDg4GuXoHducpQsV4mLddZfjO3aZyJlZxKYT8cC0VLvRmwKAescyabrSU6uepXzDJNnUu3S+Widyx/J1Oy+1SO4wHad2Il1FIEqPlRau6eAU4+HObXlgzQRQHVct1XaUH5iEdj7ZV5w9bXomyB0LpYjsxu1mJnn2QN1FSikXptMIegqdtIqmpisbGSa50AuiYs60v+/ekmEiOezJtAdrWArS3QK16Lvo4fT3OrFtD3/U3n6Zzt7XJ7WHbf6LPjyG/6ZfMEoyUr/XAMgAAAAASUVORK5CYII="};
 let lang='it';try{const q=new URLSearchParams(location.search).get('lang')||localStorage.getItem('hz-lang');if(q&&LANGS[q])lang=q;else{const n=(navigator.language||'').slice(0,2);if(LANGS[n])lang=n;else lang='en'}}catch(e){}
 let T=I18N[lang];
 const ZL=l=>lang==='it'?l:(ZONES[l]?ZONES[l][['en','fr','es','de'].indexOf(lang)]:l);
@@ -348,6 +358,7 @@ function paint(m){
 }
 function paintAll(){DATA.forEach(paint)}
 const sec=f=>{const x=f/30;const t=(Number.isInteger(x)?x:x.toFixed(1)).toString();return (lang==='en'?t:t.replace('.',','))+' s'};
+const secN=f=>{const x=f/30;const t=(Number.isInteger(x)?x:x.toFixed(1)).toString();return lang==='en'?t:t.replace('.',',')};
 const AILN=()=>[['poison',OFFICIAL.ail[lang][0]],['sleep',OFFICIAL.ail[lang][1]],['para',OFFICIAL.ail[lang][2]],['stun',T.stun],['exhaust',T.exhaust]];
 function ailTable(m){
   const w=el('div');w.append(el('h3',{},T.ailH));
@@ -362,17 +373,17 @@ function ailTable(m){
   t.innerHTML=h+'</tbody></table>';w.append(t);return w;
 }
 function trapTable(m){
-  const w=el('div');w.append(el('h3',{},T.trapH));
+  const w=el('div',{class:'traps'});w.append(el('h3',{},T.trapH));
   const TR=m.traps;
   if(!TR||(!TR.pit&&!TR.shock)){w.append(el('p',{class:'none'},T.trapNone));return w}
-  const spec={pit:{n:T.pit,step:300,floor:240},shock:{n:T.shock,step:150,floor:150}};
+  const spec={pit:{k:'pit',n:T.pit,step:300,floor:240},shock:{k:'shock',n:T.shock,step:150,floor:150}};
   const cols=[];
   ['shock','pit'].forEach(k=>{const r=TR[k];if(!r)return;const S=spec[k];
     const sub=[[T.normal,r[0]]];if(r[1]!==r[0])sub.push([T.rage,r[1]]);sub.push([T.tired,r[2]]);cols.push({S,sub})});
   const at=(b,S,n)=>Math.max(S.floor,b-S.step*(n-1));
   let N=1;while(N<8&&cols.some(c=>c.sub.some(([,b])=>at(b,c.S,N)>c.S.floor)))N++;
-  let h='<table><thead><tr><th></th>'+cols.map(c=>`<th class="g sep" colspan="${c.sub.length}">${c.S.n}</th>`).join('')+'</tr><tr><th>'+T.capture+'</th>'+cols.map(c=>c.sub.map(([l],i)=>`<th${i===0?' class="sep"':''}>${l}</th>`).join('')).join('')+'</tr></thead><tbody>';
-  for(let n=1;n<=N;n++){h+=`<tr><td>${T.ord(n,n===N)}</td>`+cols.map(c=>c.sub.map(([,b],i)=>`<td${i===0?' class="sep"':''}>${sec(at(b,c.S,n))}</td>`).join('')).join('')+'</tr>'}
+  let h='<table><thead><tr><th></th>'+cols.map(c=>`<th class="g sep" colspan="${c.sub.length}" title="${c.S.n}"><img src="${TRAPICON[c.S.k]}" alt="${c.S.n}"></th>`).join('')+'</tr><tr><th>'+T.capture+'</th>'+cols.map(c=>c.sub.map(([l],i)=>`<th${i===0?' class="sep"':''}>${l}</th>`).join('')).join('')+'</tr></thead><tbody>';
+  for(let n=1;n<=N;n++){h+=`<tr><td>${T.ord(n,n===N)}</td>`+cols.map(c=>c.sub.map(([,b],i)=>`<td${i===0?' class="sep"':''}>${secN(at(b,c.S,n))}</td>`).join('')).join('')+'</tr>'}
   const t=el('div',{class:'tbl'});t.innerHTML=h+'</tbody></table>';w.append(t);return w;
 }
 function card(m){
@@ -400,8 +411,9 @@ function card(m){
   const t=el('div',{class:'tbl'});
   t.innerHTML=`<table><thead><tr><th>${T.zone}</th>${METRICS.slice(0,3).map(E=>`<th title="${E.n}">${E.a}</th>`).join('')}${METRICS.slice(3).map((E,i)=>`<th${i===0?' class="sep"':''} title="${E.n}"><span class="dot" style="--c:var(${E.c})"></span>${E.a}</th>`).join('')}<th class="sep">${T.ko}</th></tr></thead><tbody></tbody></table>`;
   right.append(t);
-  const w=el('div',{class:'weak'});w.append(el('h3',{},T.weak),el('div',{class:'el elist'}));right.append(w);
-  const ex=el('div',{class:'extra'});ex.append(ailTable(m),trapTable(m));
+  const w=el('div',{class:'weak'});w.append(el('h3',{},T.weak),el('div',{class:'el elist'}));
+  const wt=el('div',{class:'wt'});wt.append(w,trapTable(m));right.append(wt);
+  const ex=el('div',{class:'extra'});ex.append(ailTable(m));
   c.append(left,right,ex);return c;
 }
 const J=document.getElementById('jump'),G=document.getElementById('grid');
