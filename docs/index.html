@@ -24,8 +24,9 @@
   --h0:#2a342f; --h1:#6c5b2b; --h2:#9b5c27; --h3:#c64a2b; --h4:#ef4a3c; --outline:#0b0f0d; --hf0:#e4ebe5; --hf1:#f6ecd2; --hf2:#fff3e6; --hf3:#fff6f0; --hf4:#fff6f0;
   --fire:#f06a4b; --water:#5aa1ea; --thunder:#e9bd32; --ice:#6ccbe3; --dragon:#a27ee0; color-scheme:dark}
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
-.wrap{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.wrap{max-width:1640px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 header h1{font:800 clamp(2.2rem,6vw,3.6rem)/1 var(--f-display);letter-spacing:.01em;margin:0;text-transform:uppercase;text-wrap:balance}
 header p{margin:.4rem 0 0;color:var(--muted);max-width:68ch}
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
@@ -49,7 +50,28 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .jump a:hover{color:var(--ink)}
 .grid{display:grid;grid-template-columns:1fr;gap:18px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:18px;scroll-margin-top:130px}
+@media (min-width:1280px){.card{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 300px}.card .extra{grid-column:1/3}.card .calc{grid-row:1/3;grid-column:3}}
+@media (max-width:1279px){.card .calc{grid-column:1/-1}}
 @media (max-width:860px){.card{grid-template-columns:1fr}}
+.calc{border-left:1px solid var(--line);padding-left:16px;display:flex;flex-direction:column;gap:10px;font-size:.85rem;min-width:0}
+@media (max-width:1279px){.calc{border-left:0;padding-left:0;border-top:1px solid var(--line);padding-top:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px 18px}.calc h3,.calc .tg,.calc .note{grid-column:1/-1}}
+.calc h3{font:700 .78rem var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.calc fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.calc legend{font:700 .7rem var(--f-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:0;margin-bottom:2px}
+.calc label{display:flex;flex-direction:column;gap:2px;color:var(--muted);min-width:0}
+.calc label.ck{flex-direction:row;align-items:center;gap:6px;color:var(--ink)}
+.calc select,.calc input[type=number]{font:500 .85rem var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:3px 6px;width:100%;min-width:0}
+.calc select:focus-visible,.calc input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.calc .row2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.calc .tg{display:flex;flex-direction:column;gap:4px;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.calc .mode{display:flex;gap:4px}
+.calc .mode button{flex:1;font:600 .85rem var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 8px;border-radius:999px;cursor:pointer}
+.calc .mode button[aria-checked="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.calc .mode button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:1279px){.calc .mode{grid-column:1/-1}}
+.calc .note{color:var(--muted);font-size:.75rem;margin:0}
+.calc input[type=checkbox]{accent-color:var(--accent);width:15px;height:15px;margin:0}
+td .lohi{display:block;font-size:.68rem;opacity:.8}
 .card h2{font:800 2rem/1 var(--f-display);text-transform:uppercase;margin:0;letter-spacing:.02em}
 .meta{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin-top:4px}
 .meta b{font:500 .85rem var(--f-mono);color:var(--ink)}
@@ -251,6 +273,141 @@ const ALT={
  24:{it:['Stato 2','Tabelle alternative dello stato 2 di Alatreon.'],en:['State 2','Alternate tables for Alatreon\'s state 2.'],fr:['État 2','Tables alternatives de l\'état 2 d\'Alatreon.'],es:['Estado 2','Tablas alternativas del estado 2 de Alatreon.'],de:['Zustand 2','Alternative Tabellen für Alatreons Zustand 2.']}};
 const LOCALE={it:'it-IT',en:'en-GB',fr:'fr-FR',es:'es-ES',de:'de-DE'};
 
+// Gunner data (2026-11-25): quest_data.rso shell006 (bowgun shot): shell006_atk_tbl rows (MV +4, elem mask +0xC, value +0xE),
+// life/element setup at RSO 0x2559c (Normal/Pierce/Pellet Boost, Element Atk, Bombardier x1.05, crit x1.25/x0.5, band tables),
+// rapid fire = pl_gun_ammo_entry_tbl (shots, power %). Ammo names = items 53+kind.
+// Damage calculator data, all from the PAL main.dol / decomp (InusualZ/mhtri-decomp):
+// motion values = pl_weapon*_hit_table (+4 s16), class multipliers = menu weapon_class_attack_mult,
+// sharpness = hit_sharpness_rate_tbl / hit_sharpness_elem_rate_tbl, skill factors = pl_act.cpp sdata2 pool.
+// Moves: [name key, level, MV, underwater, Classic Controller sequence]. Sequences decoded from the act step tables
+// (pl_scan_act_select / pl_scan_row_input_ck), button mode, CC remap pad_btn_default_1. Names describe the action.
+const CALC={
+ sharpRaw:[0.5,0.75,1.0,1.05,1.2,1.32],
+ sharpEl:[0.25,0.5,0.75,1.0,1.0625,1.125],
+ sharpAff:[0,0,0,0,5,10],          // fn_80274174: blue +5, white +10 affinity (positive affinity only)
+ weapons:{
+  gs:{mult:480,blunt:0,moves:[["vslash", 0, 48, 0, "X{h} → {r}"], ["vslash", 1, 65, 0, "X{h} → {r}"], ["vslash", 2, 80, 0, "X{h} → {r}"], ["vslash", 3, 110, 0, "X{h} → {r}"], ["combo", 0, 36, 0, "A"], ["combo", 0, 46, 0, "X+A"], ["follow", 0, 18, 0, "X{h} → {r} → X"], ["charged2", 0, 52, 0, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 1, 72, 0, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 2, 90, 0, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 3, 115, 0, "X{h} → {r} → X → X{h} → {r}"], ["vslash", 0, 48, 1, "X{h} → {r}"], ["vslash", 1, 65, 1, "X{h} → {r}"], ["vslash", 2, 80, 1, "X{h} → {r}"], ["vslash", 3, 110, 1, "X{h} → {r}"], ["combo", 0, 36, 1, "A"], ["combo", 0, 46, 1, "X+A"], ["follow", 0, 18, 1, "X{h} → {r} → X"], ["charged2", 0, 52, 1, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 1, 72, 1, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 2, 90, 1, "X{h} → {r} → X → X{h} → {r}"], ["charged2", 3, 115, 1, "X{h} → {r} → X → X{h} → {r}"]]},
+  sns:{mult:140,blunt:0,moves:[["combo", 1, 13, 0, "X"], ["combo", 2, 11, 0, "X → X"], ["shield", 0, 8, 0, "X → X → X"], ["combo", 3, 12, 0, "X → X → X"], ["second", 0, 20, 0, "A"], ["second", 0, 15, 0, "A → A"], ["double", 0, 16, 0, "X+A"], ["spin", 0, 14, 0, "X{s}"], ["shield", 0, 8, 0, "A{s}"], ["shield", 0, 12, 0, "A{s} → A"], ["single", 0, 24, 0, "A{s} → X{b}"], ["combo", 1, 13, 1, "X"], ["combo", 2, 11, 1, "X+A → X"], ["combo", 3, 20, 1, "X+A → X → X"], ["double", 0, 18, 1, "X+A"], ["double", 0, 18, 1, "A"], ["single", 0, 20, 1, "A{s}"], ["finish", 0, 22, 1, "X+A → X{b}"], ["rising", 0, 24, 1, "X+A → X{b} ({m})"]]},
+  hammer:{mult:520,blunt:1,moves:[["combo", 0, 15, 0, "A"], ["combo", 0, 52, 0, "X"], ["combo", 0, 20, 0, "X → X"], ["combo", 0, 65, 0, "X → X → X"], ["combo", 0, 20, 0, "A → X"], ["charge", 1, 22, 0, "R{h} → {r}"], ["charge", 2, 36, 0, "R{h} → {r}"], ["super1", 0, 20, 0, "R{h} → {r}"], ["chargem", 1, 22, 0, "R{h} + {m} → {r}"], ["chargem", 2, 36, 0, "R{h} + {m} → {r}"], ["spinhit", 0, 10, 0, "R{h} + {m} → {r}"], ["spinend", 0, 40, 0, "R{h} + {m} → {r}"], ["afterspin", 0, 60, 0, "R{h} + {m} → {r} → X"], ["single", 0, 15, 0, "R{h} → {r} → X"], ["combo", 0, 15, 1, "A"], ["combo", 0, 52, 1, "X"], ["combo", 0, 20, 1, "X → X"], ["combo", 0, 65, 1, "X → X → X"], ["combo", 0, 52, 1, "A → X"], ["charge", 1, 22, 1, "R{h} → {r}"], ["charge", 2, 36, 1, "R{h} → {r}"], ["super1", 0, 20, 1, "R{h} → {r}"], ["chargem", 1, 22, 1, "R{h} + {m} → {r}"], ["chargem", 2, 36, 1, "R{h} + {m} → {r}"], ["spinhit", 0, 10, 1, "R{h} + {m} → {r}"], ["spinend", 0, 40, 1, "R{h} + {m} → {r}"], ["afterspin", 0, 60, 1, "R{h} + {m} → {r} → X"], ["single", 0, 15, 1, "R{h} → {r} → X"]]},
+  lance:{mult:230,blunt:0,moves:[["mid", 1, 23, 0, "X"], ["high", 1, 28, 0, "A"], ["high", 2, 28, 0, "A → A"], ["high", 3, 30, 0, "A → A → A"], ["mid", 2, 23, 0, "A → X"], ["mid", 3, 30, 0, "A → A → X"], ["sweep", 0, 20, 0, "X+A"], ["counter", 0, 30, 0, "A → R{h} + A → {r}"], ["mid", 1, 23, 1, "X"], ["high", 1, 28, 1, "A"], ["high", 2, 28, 1, "A → A"], ["high", 3, 30, 1, "A → A → A"], ["mid", 2, 23, 1, "A → X"], ["mid", 3, 30, 1, "A → A → X"], ["sweep", 0, 20, 1, "X+A"], ["counter", 0, 30, 1, "A → R{h} + A → {r}"]]},
+  ls:{mult:330,blunt:0,moves:[["vslash", 0, 28, 0, "X"], ["thrust", 0, 14, 0, "A"], ["combo", 0, 24, 0, "X+A"], ["combo", 0, 18, 0, "A → X"], ["combo", 0, 14, 0, "R → X"], ["combo", 0, 18, 0, "R → R → X"], ["spirit", 1, 30, 0, "R"], ["spirit", 2, 36, 0, "R → R"], ["spirit3", 1, 18, 0, "R → R → R"], ["spirit3", 2, 24, 0, "R → R → R"], ["spirit3", 3, 10, 0, "R → R → R"], ["round", 0, 36, 0, "R → R → R → R"], ["fade", 0, 24, 0, "R → X+A{s}"], ["spiritx", 0, 16, 0, "R"], ["vslash", 0, 28, 1, "X"], ["thrust", 0, 14, 1, "A"], ["combo", 0, 24, 1, "X+A"], ["combo", 0, 18, 1, "A → X"], ["combo", 0, 14, 1, "R → X"], ["combo", 0, 18, 1, "R → R → X"], ["spirit", 1, 30, 1, "R"], ["spirit", 2, 36, 1, "R → R"], ["spirit3", 1, 18, 1, "R → R → R"], ["spirit3", 2, 24, 1, "R → R → R"], ["spirit3", 3, 10, 1, "R → R → R"], ["round", 0, 36, 1, "R → R → R → R"], ["fade", 0, 24, 1, "R → X+A{s}"], ["spiritx", 0, 16, 1, "R"], ["combo", 0, 23, 0, "X → X"]]},
+  swaxe:{mult:540,blunt:0,moves:[["three", 0, 54, 0, "X"], ["combo", 0, 20, 0, "X{s}"], ["combo", 0, 25, 0, "A"], ["combo", 0, 38, 0, "A → X"], ["finish", 0, 20, 0, "A → X → X"], ["morph", 0, 34, 0, "X{s} → R"], ["charged", 0, 30, 0, "X{s} → R → X+A"], ["combo", 0, 22, 0, "X{s} → R → X"], ["three", 0, 54, 1, "X"], ["combo", 0, 20, 1, "X{s}"], ["combo", 0, 25, 1, "A"], ["combo", 0, 38, 1, "A → X"], ["finish", 0, 20, 1, "A → X → X"], ["morph", 0, 34, 1, "X{s} → R"], ["charged", 0, 30, 1, "X{s} → R → X+A"], ["combo", 0, 22, 1, "X{s} → R → X"]]}
+ },
+ gun:{"mult": 120, "ammo": [[0, 6, 0, 0, "N", null, 0], [1, 12, 0, 0, "N", null, 0], [2, 10, 0, 0, "N", null, 0], [3, 10, 0, 0, "P", null, 0], [4, 9, 0, 0, "P", null, 0], [5, 8, 0, 0, "P", null, 0], [6, 5, 2, 5, "S", "t3", 0], [7, 5, 2, 4, "S", "t4", 0], [8, 5, 2, 4, "S", "t5", 0], [9, 3, 0, 0, "O", null, 0], [10, 3, 0, 0, "O", null, 0], [11, 3, 0, 0, "O", null, 0], [12, 6, 0, 0, "O", null, 0], [13, 6, 0, 0, "O", null, 0], [14, 6, 0, 0, "O", null, 0], [15, 7, 1, 45, "E", null, 0], [16, 5, 2, 15, "E", null, 0], [17, 5, 3, 15, "E", null, 0], [18, 5, 4, 15, "E", null, 0], [19, 1, 5, 64, "D", null, 0], [22, 10, 0, 0, "O", null, 0], [23, 15, 0, 0, "O", null, 0], [24, 10, 0, 0, "O", null, 0], [25, 15, 0, 0, "O", null, 0], [36, 10, 0, 0, "X", null, 0], [38, 1, 0, 0, "O", null, 0], [34, 4, 2, 4, "U", "s2", 1], [35, 4, 2, 4, "U", "s3", 1], [34, 8, 2, 4, "U", "s0", 2], [35, 8, 2, 4, "U", "s1", 2]], "names": {"0": {"it": "P Normale Lv1", "en": "Normal S Lv1", "fr": "Mn Normale Nv1", "es": "D. normal Nv1", "de": "Normal S St1"}, "1": {"it": "P Normale Lv2", "en": "Normal S Lv2", "fr": "Mn Normale Nv2", "es": "D. normal Nv2", "de": "Normal S St2"}, "2": {"it": "P Normale Lv3", "en": "Normal S Lv3", "fr": "Mn Normale Nv3", "es": "D. normal Nv3", "de": "Normal S St3"}, "3": {"it": "P Perfor. Lv1", "en": "Pierce S Lv1", "fr": "Mn Perç. Nv1", "es": "D. perfor. Nv1", "de": "Pierce S St1"}, "4": {"it": "P Perfor. Lv2", "en": "Pierce S Lv2", "fr": "Mn Perç. Nv2", "es": "D. perfor. Nv2", "de": "Pierce S St2"}, "5": {"it": "P Perfor. Lv3", "en": "Pierce S Lv3", "fr": "Mn Perç. Nv3", "es": "D. perfor. Nv3", "de": "Pierce S St3"}, "6": {"it": "P Pallott. Lv1", "en": "Pellet S Lv1", "fr": "Mn Plomb Nv1", "es": "D. perdig. Nv1", "de": "Schrot S St1"}, "7": {"it": "P Pallott. Lv2", "en": "Pellet S Lv2", "fr": "Mn Plomb Nv2", "es": "D. perdig. Nv2", "de": "Schrot S St2"}, "8": {"it": "P Pallott. Lv3", "en": "Pellet S Lv3", "fr": "Mn Plomb Nv3", "es": "D. perdig. Nv3", "de": "Schrot S St3"}, "9": {"it": "P Picco Lv1", "en": "Crag S Lv1", "fr": "Mn Explos. Nv1", "es": "D. expl. Nv1", "de": "Crag S St1"}, "10": {"it": "P Picco Lv2", "en": "Crag S Lv2", "fr": "Mn Explos. Nv2", "es": "D. expl. Nv2", "de": "Crag S St2"}, "11": {"it": "P Picco Lv3", "en": "Crag S Lv3", "fr": "Mn Explos. Nv3", "es": "D. expl. Nv3", "de": "Crag S St3"}, "12": {"it": "P Grappolo Lv1", "en": "Clust S Lv1", "fr": "Mn Frag. Nv1", "es": "D. grupo Nv1", "de": "Streu S St1"}, "13": {"it": "P Grappolo Lv2", "en": "Clust S Lv2", "fr": "Mn Frag. Nv2", "es": "D. grupo Nv2", "de": "Streu S St2"}, "14": {"it": "P Grappolo Lv3", "en": "Clust S Lv3", "fr": "Mn Frag. Nv3", "es": "D. grupo Nv3", "de": "Streu S St3"}, "15": {"it": "P Fiamma", "en": "Flaming S", "fr": "Mn Enflammée", "es": "Disp. llama", "de": "Flamme S"}, "16": {"it": "P Acqua", "en": "Water S", "fr": "Mn Aquatique", "es": "Disp. agua", "de": "Wasser S"}, "17": {"it": "P Tuono", "en": "Thunder S", "fr": "Mn Foudre", "es": "Disp. trueno", "de": "Donner S"}, "18": {"it": "P Gelo", "en": "Freeze S", "fr": "Mn Gel", "es": "Disp. congel.", "de": "Frost S"}, "19": {"it": "P Drago", "en": "Dragon S", "fr": "Mn Dragon", "es": "Disp. dragón", "de": "Drachen S"}, "22": {"it": "P Veleno Lv1", "en": "Poison S Lv1", "fr": "Mn Poison Nv1", "es": "D. veneno Nv1", "de": "Gift S St1"}, "23": {"it": "P Veleno Lv2", "en": "Poison S Lv2", "fr": "Mn Poison Nv2", "es": "D. veneno Nv2", "de": "Gift S St2"}, "24": {"it": "P Paralisi Lv1", "en": "Para S Lv1", "fr": "Mn Para Nv1", "es": "D. aturd. Nv1", "de": "Lähmung S St1"}, "25": {"it": "P Paralisi Lv2", "en": "Para S Lv2", "fr": "Mn Para Nv2", "es": "D. aturd. Nv2", "de": "Lähmung S St2"}, "34": {"it": "P Subacq. Lv1", "en": "Sub S Lv1", "fr": "Mn SM Nv1", "es": "D. sub. Nv1", "de": "Unterw. S St1"}, "35": {"it": "P Subacq. Lv2", "en": "Sub S Lv2", "fr": "Mn SM Nv2", "es": "D. sub. Nv2", "de": "Unterw. S St2"}, "36": {"it": "P Fatica", "en": "Exhaust S", "fr": "Mn Épuis.", "es": "D. agotador", "de": "Ermüdung S"}, "38": {"it": "P Lacerante", "en": "Slicing S", "fr": "Mn Tranchante", "es": "D. cortador", "de": "Schnitt S"}}, "rapid": {"0": [[3, 80]], "1": [[3, 50], [4, 60]], "2": [[5, 60]], "3": [[3, 60], [5, 50]], "4": [[3, 60]], "5": [[2, 75]], "6": [[3, 70], [2, 80]], "7": [[3, 80]], "8": [[2, 85]], "9": [[2, 60], [3, 60]], "12": [[2, 60]], "15": [[3, 60], [5, 50]], "16": [[3, 60]], "17": [[3, 60]], "18": [[3, 60]], "19": [[2, 85]], "20": [[3, 80]], "22": [[2, 80], [3, 70]], "34": [[2, 85]]}, "tables": {"t3": [1.7, 1.0, 0.3, 0.0], "t4": [1.7, 1.5, 0.5, 0.3], "t5": [2.0, 1.9, 0.5, 0.3, 0.3], "s0": [1.7, 1.0, 0.3], "s1": [2.0, 1.9, 0.5, 0.3, 0.3, 0.0], "s2": [1.7, 0.3], "s3": [1.7, 1.0, 0.3]}, "skills": {"51": {"it": "Potenzia P Norm.", "en": "Normal S Boost", "fr": "Normale giga", "es": "Pot. D Normal", "de": "Normal S-Stärk."}, "52": {"it": "Potenzia P Perf.", "en": "Pierce S Boost", "fr": "Perçante giga", "es": "Pot. D Perfor", "de": "Pierce S-Stärk."}, "53": {"it": "Potenzia P Pall.", "en": "Pellet S Boost", "fr": "Plomb giga", "es": "Pot. D Perdig", "de": "Schrot S-Stärk."}, "67": {"it": "Bombarolo", "en": "Bombardier", "fr": "Bombardier", "es": "Bombardero", "de": "Bombardier"}}}
+};
+const CALC_I18N={
+it:{title:'Calcolo danni',show:'Mostra i danni nella tabella',all:'Applica a tutti i mostri',weapon:'Arma',move:'Mossa',
+ land:'A terra',water:"Sott'acqua",attack:'Attacco (come nel menu)',sharp:'Acutezza',aff:'Affinità %',elem:'Elemento',elemVal:'Valore elemento',
+ none:'Nessuno',skills:'Abilità',atkSkill:'Attacco',critEye:'Occhio critico',elSkill:'Att. elementale',hp:'Con poca salute',
+ fortify:'Rafforzamento',faints:n=>n?`${n} svenimento${n>1?'i':''}`:'nessuno',draw:'Colpo da estrazione (Estrazione critica)',items:'Oggetti',
+ extraAtk:'Altri bonus attacco (bevande, cibo…)',spiritLv:'Lama spirito',phial:'Fiala attiva',phPow:'Potere (×1,25 fisico)',phEl:'Elemento (×1,25)',
+ monster:'Mostro',questRate:'Moltiplicatore della missione',sleep:'Addormentato (×3, primo colpo)',trap:'In trappola (×1,1)',
+ phys:'Fisico',el:'Elem.',total:'Totale',avg:'media con l\'affinità',noCrit:'senza critico',crit:'critico',
+ note:'Valori per un colpo, con la formula del gioco. I nomi delle mosse descrivono l\'azione nel codice, non sono ufficiali.',
+ wnames:{gs:'Spadone',sns:'Spada e scudo',hammer:'Martello',lance:'Lancia',ls:'Spada lunga',swaxe:'Spadascia'},
+ sharpN:['Rosso','Arancione','Giallo','Verde','Blu','Bianco'],
+ mv:{follow:'Colpo successivo',chargem:'Colpo caricato in movimento',afterspin:'Colpo dopo la rotazione',thrust:'Affondo',morph:'Colpo con trasformazione',vslash:'Fendente',charged2:'Colpo caricato (2ª carica)',combo:'Colpo della combo',guard:'Colpo dalla guardia',push:'Spinta',
+  shield:'Colpo di scudo',double:'Doppio colpo (per colpo)',spin:'Colpo rotante',second:'Secondo colpo',chain:'Colpo in sequenza',single:'Colpo singolo',
+  rising:'Colpo ascendente',finish:'Colpo finale',opener:'Colpo d\'apertura',back:'Colpo all\'indietro',charge:'Colpo caricato',
+  super1:'Carica liv. 3 da fermo (1° colpo)',spinhit:'Carica liv. 3 in movimento (ogni giro)',spinend:'Carica liv. 3 in movimento (colpo finale)',
+  mid:'Affondo medio',high:'Affondo alto',sweep:'Spazzata',runstart:'Carica in corsa (primo colpo)',run:'Carica in corsa (colpi successivi)',
+  counter:'Contrattacco',other:'Altro colpo',fade:'Taglio in ritirata',spirit:'Lama spirito',spiritx:'Lama spirito (colpo senza consumo)',
+  spirit3:'Lama spirito 3',round:'Taglio rotante spirito',three:'Colpo in tre fasi',lunge:'Affondo',charged:'Colpo caricato',impact:'Colpo d\'impatto',rapid:'Colpi ripetuti'},
+ seq:{h:' (tieni)',r:'rilascia',s:' + stick',b:' + stick indietro',m:'muovi lo stick'},keys:'Tasti del Classic Controller con gli attacchi sui tasti. Su un controller in stile PlayStation: X = △, A = ○, Y = □, B = ✕. Per le cariche, il livello dipende da quanto tieni premuto.',
+ hit:n=>` (${n}° colpo)`, modeB:'Spadaccino',modeG:'Artigliere',gunW:'Balestra',ammo:'Munizione',gatk:'Attacco balestra (come nel menu)',rapid:'Fuoco rapido',rapidNone:'Nessuno',rapidN:(s,p)=>`${s} colpi × ${p}%`,band:'Fascia del colpo',noteGun:'Valori per un colpo. La balestra usa la colonna Proiettili delle hitzone. Il P Fatica ignora le hitzone. Le fasce di Pallottole e Subacquei sono i moltiplicatori che il gioco applica a ogni pallottola (1,7 = la più forte). Il P Drago non dipende dall\'attacco. Per Picco e Grappolo conta solo l\'impatto, non l\'esplosione.',
+ lv:n=>` liv. ${n}`,atkS:['Nessuna','Att. aum. (picc.) +10','Att. aum. (medio) +15','Att. aum. (gran.) +20','Att. dim. (picc.) −5','Att. dim. (medio) −10','Att. dim. (gran.) −15'],
+ hpS:['Nessuna','Adrenalina +2 (×1,3)','Inquietudine (×0,7)'],elS:['Nessuna','Att.elementale + (×1,2)','Att.elementale − (×0,85)'],
+ spS:['Nessuna','Livello 1 (×1,05)','Livello 2 (×1,1)','Livello 3 (×1,3)'],charm:'Superamuleto (+6)',talon:'Superartiglio (+9)'},
+en:{title:'Damage calculator',show:'Show damage in the table',all:'Apply to all monsters',weapon:'Weapon',move:'Move',
+ land:'On land',water:'Underwater',attack:'Attack (as in the menu)',sharp:'Sharpness',aff:'Affinity %',elem:'Element',elemVal:'Element value',
+ none:'None',skills:'Skills',atkSkill:'Attack',critEye:'Critical Eye',elSkill:'Element Atk',hp:'At low health',
+ fortify:'Fortify',faints:n=>n?`${n} faint${n>1?'s':''}`:'none',draw:'Draw attack (Critical Draw)',items:'Items',
+ extraAtk:'Other attack bonus (drinks, meals…)',spiritLv:'Spirit gauge',phial:'Active phial',phPow:'Power (×1.25 raw)',phEl:'Element (×1.25)',
+ monster:'Monster',questRate:'Quest multiplier',sleep:'Asleep (×3, first hit)',trap:'Trapped (×1.1)',
+ phys:'Raw',el:'Elem.',total:'Total',avg:'average with affinity',noCrit:'no crit',crit:'crit',
+ note:'Values per hit, using the game\'s formula. Move names describe the action in the code; they are not official.',
+ wnames:{gs:'Great Sword',sns:'Sword and Shield',hammer:'Hammer',lance:'Lance',ls:'Long Sword',swaxe:'Switch Axe'},
+ sharpN:['Red','Orange','Yellow','Green','Blue','White'],
+ mv:{follow:'Follow-up strike',chargem:'Charged attack while moving',afterspin:'Strike after the spin',thrust:'Thrust',morph:'Morph strike',vslash:'Vertical slash',charged2:'Charged attack (2nd charge)',combo:'Combo hit',guard:'Guard attack',push:'Push',
+  shield:'Shield bash',double:'Double strike (per hit)',spin:'Spinning slash',second:'Second strike',chain:'Chain strike',single:'Single strike',
+  rising:'Rising strike',finish:'Finisher',opener:'Opening strike',back:'Back swing',charge:'Charged attack',
+  super1:'Lv3 charge standing (1st hit)',spinhit:'Lv3 charge moving (per spin)',spinend:'Lv3 charge moving (finisher)',
+  mid:'Mid thrust',high:'High thrust',sweep:'Sweep',runstart:'Charge run (first hit)',run:'Charge run (later hits)',
+  counter:'Counter',other:'Other strike',fade:'Fade slash',spirit:'Spirit blade',spiritx:'Spirit blade (no gauge cost)',
+  spirit3:'Spirit blade 3',round:'Spirit roundslash',three:'Three-stage strike',lunge:'Lunge',charged:'Charged strike',impact:'Impact strike',rapid:'Rapid strikes'},
+ seq:{h:' (hold)',r:'release',s:' + stick',b:' + stick back',m:'move the stick'},keys:'Classic Controller buttons, with attacks on the buttons. On a PlayStation-style pad: X = △, A = ○, Y = □, B = ✕. For charges, the level depends on how long you hold.',
+ hit:n=>` (hit ${n})`, modeB:'Blademaster',modeG:'Gunner',gunW:'Bowgun',ammo:'Ammo',gatk:'Bowgun attack (as in the menu)',rapid:'Rapid fire',rapidNone:'None',rapidN:(s,p)=>`${s} shots × ${p}%`,band:'Shot band',noteGun:'Values per hit. Bowguns use the Shot column of the hitzones. Exhaust S ignores hitzones. Pellet and Sub S bands are the multipliers the game applies to each pellet (1.7 = strongest). Dragon S does not scale with attack. For Crag and Clust only the impact counts, not the explosion.',
+ lv:n=>` lv ${n}`,atkS:['None','Attack Up (S) +10','Attack Up (M) +15','Attack Up (L) +20','Attack Down (S) −5','Attack Down (M) −10','Attack Down (L) −15'],
+ hpS:['None','Adrenaline +2 (×1.3)','Worrywart (×0.7)'],elS:['None','Element Atk Up (×1.2)','Element Atk Down (×0.85)'],
+ spS:['None','Level 1 (×1.05)','Level 2 (×1.1)','Level 3 (×1.3)'],charm:'Powercharm (+6)',talon:'Powertalon (+9)'},
+fr:{title:'Calcul des dégâts',show:'Afficher les dégâts dans le tableau',all:'Appliquer à tous les monstres',weapon:'Arme',move:'Attaque',
+ land:'Sur terre',water:'Sous l\'eau',attack:'Attaque (comme dans le menu)',sharp:'Tranchant',aff:'Affinité %',elem:'Élément',elemVal:'Valeur d\'élément',
+ none:'Aucun',skills:'Talents',atkSkill:'Attaque',critEye:'Œil critique',elSkill:'Élémental',hp:'Avec peu de santé',
+ fortify:'Ténacité',faints:n=>n?`${n} évanouissement${n>1?'s':''}`:'aucun',draw:'Attaque en dégainant (Critique)',items:'Objets',
+ extraAtk:'Autres bonus d\'attaque (boissons, repas…)',spiritLv:'Lame spirituelle',phial:'Fiole active',phPow:'Puissance (×1,25 brut)',phEl:'Élément (×1,25)',
+ monster:'Monstre',questRate:'Multiplicateur de quête',sleep:'Endormi (×3, premier coup)',trap:'Piégé (×1,1)',
+ phys:'Brut',el:'Élém.',total:'Total',avg:'moyenne avec l\'affinité',noCrit:'sans critique',crit:'critique',
+ note:'Valeurs par coup, avec la formule du jeu. Les noms des attaques décrivent l\'action dans le code et ne sont pas officiels.',
+ wnames:{gs:'Grande épée',sns:'Épée et bouclier',hammer:'Marteau',lance:'Lance',ls:'Épée longue',swaxe:'Morpho-hache'},
+ sharpN:['Rouge','Orange','Jaune','Vert','Bleu','Blanc'],
+ mv:{follow:'Coup enchaîné',chargem:'Coup chargé en mouvement',afterspin:'Coup après la rotation',thrust:'Estoc',morph:'Coup de transformation',vslash:'Coup vertical',charged2:'Coup chargé (2e charge)',combo:'Coup de combo',guard:'Coup depuis la garde',push:'Poussée',
+  shield:'Coup de bouclier',double:'Double coup (par coup)',spin:'Coup tournoyant',second:'Deuxième coup',chain:'Coup enchaîné',single:'Coup simple',
+  rising:'Coup ascendant',finish:'Coup final',opener:'Coup d\'ouverture',back:'Coup en arrière',charge:'Coup chargé',
+  super1:'Charge niv. 3 à l\'arrêt (1er coup)',spinhit:'Charge niv. 3 en mouvement (par tour)',spinend:'Charge niv. 3 en mouvement (coup final)',
+  mid:'Estoc moyen',high:'Estoc haut',sweep:'Balayage',runstart:'Charge en course (premier coup)',run:'Charge en course (coups suivants)',
+  counter:'Contre-attaque',other:'Autre coup',fade:'Coup en retrait',spirit:'Lame spirituelle',spiritx:'Lame spirituelle (sans jauge)',
+  spirit3:'Lame spirituelle 3',round:'Coup circulaire spirituel',three:'Coup en trois temps',lunge:'Fente',charged:'Coup chargé',impact:'Coup d\'impact',rapid:'Coups répétés'},
+ seq:{h:' (maintenir)',r:'relâcher',s:' + stick',b:' + stick arrière',m:'bouger le stick'},keys:'Boutons de la Manette Classique, attaques sur les boutons. Sur une manette type PlayStation : X = △, A = ○, Y = □, B = ✕. Pour les charges, le niveau dépend de la durée de pression.',
+ hit:n=>` (${n}${n===1?'er':'e'} coup)`, modeB:'Épéiste',modeG:'Artilleur',gunW:'Fusarbalète',ammo:'Munition',gatk:'Attaque fusarbalète (comme dans le menu)',rapid:'Tir rapide',rapidNone:'Aucun',rapidN:(s,p)=>`${s} tirs × ${p}%`,band:'Tranche du tir',noteGun:'Valeurs par coup. Les fusarbalètes utilisent la colonne Tir des zones. Les munitions d\'épuisement ignorent les zones. Les tranches des plombs et sous-marines sont les multiplicateurs appliqués à chaque plomb (1,7 = le plus fort). Le tir dragon ne dépend pas de l\'attaque. Pour les munitions explosives, seul l\'impact compte.',
+ lv:n=>` niv. ${n}`,atkS:['Aucun','Attaque +1 (+10)','Attaque +2 (+15)','Attaque +3 (+20)','Attaque -1 (−5)','Attaque -2 (−10)','Attaque -3 (−15)'],
+ hpS:['Aucun','Adrénaline +2 (×1,3)','Inquiétude (×0,7)'],elS:['Aucun','Élémental + (×1,2)','Élémental - (×0,85)'],
+ spS:['Aucun','Niveau 1 (×1,05)','Niveau 2 (×1,1)','Niveau 3 (×1,3)'],charm:'Charme pouvoir (+6)',talon:'Griffe pouvoir (+9)'},
+es:{title:'Cálculo de daño',show:'Mostrar el daño en la tabla',all:'Aplicar a todos los monstruos',weapon:'Arma',move:'Ataque',
+ land:'En tierra',water:'Bajo el agua',attack:'Ataque (como en el menú)',sharp:'Afilado',aff:'Afinidad %',elem:'Elemento',elemVal:'Valor de elemento',
+ none:'Ninguno',skills:'Habilidades',atkSkill:'Ataque',critEye:'Ojo crítico',elSkill:'AtqElem',hp:'Con poca salud',
+ fortify:'Fortalecer',faints:n=>n?`${n} desmayo${n>1?'s':''}`:'ninguno',draw:'Ataque al desenfundar (Dsnf. Esp.)',items:'Objetos',
+ extraAtk:'Otros bonus de ataque (bebidas, comida…)',spiritLv:'Espíritu',phial:'Vial activo',phPow:'Poder (×1,25 bruto)',phEl:'Elemento (×1,25)',
+ monster:'Monstruo',questRate:'Multiplicador de la misión',sleep:'Dormido (×3, primer golpe)',trap:'Atrapado (×1,1)',
+ phys:'Bruto',el:'Elem.',total:'Total',avg:'media con la afinidad',noCrit:'sin crítico',crit:'crítico',
+ note:'Valores por golpe, con la fórmula del juego. Los nombres de los ataques describen la acción en el código; no son oficiales.',
+ wnames:{gs:'Gran espada',sns:'Espada y escudo',hammer:'Martillo',lance:'Lanza',ls:'Espada larga',swaxe:'Hacha espada'},
+ sharpN:['Rojo','Naranja','Amarillo','Verde','Azul','Blanco'],
+ mv:{follow:'Golpe siguiente',chargem:'Ataque cargado en movimiento',afterspin:'Golpe tras el giro',thrust:'Estocada',morph:'Golpe con transformación',vslash:'Tajo vertical',charged2:'Ataque cargado (2.ª carga)',combo:'Golpe de combo',guard:'Golpe desde la guardia',push:'Empujón',
+  shield:'Golpe de escudo',double:'Golpe doble (por golpe)',spin:'Golpe giratorio',second:'Segundo golpe',chain:'Golpe encadenado',single:'Golpe simple',
+  rising:'Golpe ascendente',finish:'Golpe final',opener:'Golpe de apertura',back:'Golpe hacia atrás',charge:'Ataque cargado',
+  super1:'Carga nv. 3 parado (1.er golpe)',spinhit:'Carga nv. 3 en movimiento (por giro)',spinend:'Carga nv. 3 en movimiento (golpe final)',
+  mid:'Estocada media',high:'Estocada alta',sweep:'Barrido',runstart:'Carga a la carrera (primer golpe)',run:'Carga a la carrera (golpes siguientes)',
+  counter:'Contraataque',other:'Otro golpe',fade:'Tajo en retirada',spirit:'Hoja espiritual',spiritx:'Hoja espiritual (sin gasto)',
+  spirit3:'Hoja espiritual 3',round:'Tajo giratorio espiritual',three:'Golpe en tres fases',lunge:'Estocada',charged:'Golpe cargado',impact:'Golpe de impacto',rapid:'Golpes repetidos'},
+ seq:{h:' (mantén)',r:'suelta',s:' + stick',b:' + stick atrás',m:'mueve el stick'},keys:'Botones del Mando Clásico, con los ataques en los botones. En un mando tipo PlayStation: X = △, A = ○, Y = □, B = ✕. En las cargas, el nivel depende de cuánto mantengas pulsado.',
+ hit:n=>` (${n}.º golpe)`, modeB:'Espadachín',modeG:'Artillero',gunW:'Ballesta',ammo:'Munición',gatk:'Ataque de ballesta (como en el menú)',rapid:'Fuego rápido',rapidNone:'Ninguno',rapidN:(s,p)=>`${s} disparos × ${p}%`,band:'Franja del disparo',noteGun:'Valores por golpe. Las ballestas usan la columna Disparo de las zonas. La munición de agotamiento ignora las zonas. Las franjas de perdigones y subacuáticas son los multiplicadores que aplica el juego a cada perdigón (1,7 = el más fuerte). El disparo dragón no depende del ataque. En las explosivas solo cuenta el impacto.',
+ lv:n=>` nv. ${n}`,atkS:['Ninguna','Ataque pot. (P) +10','Ataque pot. (M) +15','Ataque pot. (G) +20','Ataque red. (P) −5','Ataque red. (M) −10','Ataque red. (G) −15'],
+ hpS:['Ninguna','Adrenalina +2 (×1,3)','Agobiado (×0,7)'],elS:['Ninguna','AtqElem + (×1,2)','AtqElem - (×0,85)'],
+ spS:['Ninguno','Nivel 1 (×1,05)','Nivel 2 (×1,1)','Nivel 3 (×1,3)'],charm:'Amuleto de poder (+6)',talon:'Garra de poder (+9)'},
+de:{title:'Schadensrechner',show:'Schaden in der Tabelle zeigen',all:'Auf alle Monster anwenden',weapon:'Waffe',move:'Angriff',
+ land:'An Land',water:'Unter Wasser',attack:'Angriff (wie im Menü)',sharp:'Schärfe',aff:'Affinität %',elem:'Element',elemVal:'Elementwert',
+ none:'Keins',skills:'Fähigkeiten',atkSkill:'Angriff',critEye:'Krit. Auge',elSkill:'Elementangriff',hp:'Bei wenig Leben',
+ fortify:'Kräftigen',faints:n=>n?`${n}× ohnmächtig`:'keine',draw:'Angriff beim Ziehen (Kritischer Hieb)',items:'Gegenstände',
+ extraAtk:'Weitere Angriffsboni (Getränke, Essen…)',spiritLv:'Geistklinge',phial:'Aktive Phiole',phPow:'Kraft (×1,25 roh)',phEl:'Element (×1,25)',
+ monster:'Monster',questRate:'Quest-Multiplikator',sleep:'Schlafend (×3, erster Treffer)',trap:'In der Falle (×1,1)',
+ phys:'Roh',el:'Elem.',total:'Gesamt',avg:'Mittelwert mit Affinität',noCrit:'ohne Krit',crit:'Krit',
+ note:'Werte pro Treffer, mit der Formel des Spiels. Die Angriffsnamen beschreiben die Aktion im Code und sind nicht offiziell.',
+ wnames:{gs:'Großschwert',sns:'Schwert und Schild',hammer:'Hammer',lance:'Lanze',ls:'Langschwert',swaxe:'Morph-Axt'},
+ sharpN:['Rot','Orange','Gelb','Grün','Blau','Weiß'],
+ mv:{follow:'Folgeschlag',chargem:'Aufgeladener Angriff in Bewegung',afterspin:'Schlag nach der Drehung',thrust:'Stich',morph:'Morph-Schlag',vslash:'Vertikalhieb',charged2:'Aufgeladener Angriff (2. Ladung)',combo:'Kombo-Treffer',guard:'Angriff aus dem Block',push:'Stoß',
+  shield:'Schildschlag',double:'Doppelschlag (pro Treffer)',spin:'Drehhieb',second:'Zweiter Schlag',chain:'Kettenschlag',single:'Einzelschlag',
+  rising:'Aufwärtsschlag',finish:'Abschlussschlag',opener:'Eröffnungsschlag',back:'Rückwärtsschlag',charge:'Aufgeladener Angriff',
+  super1:'Ladung St. 3 im Stand (1. Treffer)',spinhit:'Ladung St. 3 in Bewegung (pro Drehung)',spinend:'Ladung St. 3 in Bewegung (Abschluss)',
+  mid:'Mittlerer Stich',high:'Hoher Stich',sweep:'Fegen',runstart:'Sturmangriff (erster Treffer)',run:'Sturmangriff (weitere Treffer)',
+  counter:'Konter',other:'Anderer Schlag',fade:'Rückzugshieb',spirit:'Geistklinge',spiritx:'Geistklinge (ohne Verbrauch)',
+  spirit3:'Geistklinge 3',round:'Geist-Rundumhieb',three:'Dreistufiger Schlag',lunge:'Ausfall',charged:'Aufgeladener Schlag',impact:'Wuchtschlag',rapid:'Schnelle Schläge'},
+ seq:{h:' (halten)',r:'loslassen',s:' + Stick',b:' + Stick zurück',m:'Stick bewegen'},keys:'Tasten des Classic Controllers, Angriffe auf den Tasten. Auf einem PlayStation-Pad: X = △, A = ○, Y = □, B = ✕. Bei Ladungen hängt die Stufe davon ab, wie lange du hältst.',
+ hit:n=>` (${n}. Treffer)`, modeB:'Klingenmeister',modeG:'Schütze',gunW:'Armbrust',ammo:'Munition',gatk:'Armbrust-Angriff (wie im Menü)',rapid:'Schnellfeuer',rapidNone:'Keins',rapidN:(s,p)=>`${s} Schüsse × ${p}%`,band:'Schussstufe',noteGun:'Werte pro Treffer. Armbrüste nutzen die Spalte Schuss der Trefferzonen. Ermüdungsmunition ignoriert Trefferzonen. Die Stufen von Schrot und Unterwasser sind die Multiplikatoren pro Kugel (1,7 = am stärksten). Drachenmunition hängt nicht vom Angriff ab. Bei Explosivmunition zählt nur der Aufprall.',
+ lv:n=>` St. ${n}`,atkS:['Keine','Angriff + (+10)','Angriff ++ (+15)','Angriff +++ (+20)','Angriff - (−5)','Angriff -- (−10)','Angriff --- (−15)'],
+ hpS:['Keine','Adrenalin +2 (×1,3)','Pessimist (×0,7)'],elS:['Keine','Elementang. hoch (×1,2)','Elementa. runter (×0,85)'],
+ spS:['Keine','Stufe 1 (×1,05)','Stufe 2 (×1,1)','Stufe 3 (×1,3)'],charm:'Kraftamulett (+6)',talon:'Kraftkralle (+9)'}
+};
+
 const TRAPICON={"pit": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAMAAACf4xmcAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAABIUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE2MYFulcRwyImKyemm/gzFZPUZ/VxUmGiM/Kz9yTjhlRQ4ZESpMNFSYaAcMCGiKBJAAAAAIdFJOUwARRDNm7ohVUWytugAAAAd0SU1FB+oLGBUYCuFVzPkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMTEtMjRUMjE6MjQ6MTArMDA6MDBtMF8hAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTExLTI0VDIxOjI0OjEwKzAwOjAwHG3nnQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0xMS0yNFQyMToyNDoxMCswMDowMEt4xkIAAAGtSURBVDjLtZTbktwgDER926SNEOJim///05SEvWM8k+QhlX4C1UFSC5th+F8aJ9No63mapnn8BOHUMAznenlws0VX55xboRR5Zhce3IwgBLDKYRgRPRMJJ0wd9uU4A8U4xRJvQFo9fjyxAmz+hWkTO0eMHXYoBuedN4zcDoA4YO6wrEXBBGIMxklFYsHPzkJi9t5zRFSsGYfw+sKmZVlQ12ZzbUWbDg5YlqW53VKK2u4pwoyacjJHCTGlzbCYJUCrqjxVYDtYos7HRwTJ8cJ0GK1qqZZFqc3zuqH0WCVLloDq2Ww71iE9MMTvbDg4GuXoHducpQsV4mLddZfjO3aZyJlZxKYT8cC0VLvRmwKAescyabrSU6uepXzDJNnUu3S+Widyx/J1Oy+1SO4wHad2Il1FIEqPlRau6eAU4+HObXlgzQRQHVct1XaUH5iEdj7ZV5w9bXomyB0LpYjsxu1mJnn2QN1FSikXptMIegqdtIqmpisbGSa50AuiYs60v+/ekmEiOezJtAdrWArS3QK16Lvo4fT3OrFtD3/U3n6Zzt7XJ7WHbf6LPjyG/6ZfMEoyUr/XAMgAAAAASUVORK5CYII=", "shock": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAMAAACf4xmcAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAABIUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI93mamNtTQrN7aYw8Oj0VtMYYJsiycgKUE2RXVhfWhWbxoVG05BU5yCpw0KDffayRgAAAAIdFJOUwARRDNm7ohVUWytugAAAAd0SU1FB+oLGBUYCuFVzPkAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjYtMTEtMjRUMjE6MjQ6MTArMDA6MDBtMF8hAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI2LTExLTI0VDIxOjI0OjEwKzAwOjAwHG3nnQAAACh0RVh0ZGF0ZTp0aW1lc3RhbXAAMjAyNi0xMS0yNFQyMToyNDoxMCswMDowMEt4xkIAAAGtSURBVDjLtZTbktwgDER926SNEOJim///05SEvWM8k+QhlX4C1UFSC5th+F8aJ9No63mapnn8BOHUMAznenlws0VX55xboRR5Zhce3IwgBLDKYRgRPRMJJ0wd9uU4A8U4xRJvQFo9fjyxAmz+hWkTO0eMHXYoBuedN4zcDoA4YO6wrEXBBGIMxklFYsHPzkJi9t5zRFSsGYfw+sKmZVlQ12ZzbUWbDg5YlqW53VKK2u4pwoyacjJHCTGlzbCYJUCrqjxVYDtYos7HRwTJ8cJ0GK1qqZZFqc3zuqH0WCVLloDq2Ww71iE9MMTvbDg4GuXoHducpQsV4mLddZfjO3aZyJlZxKYT8cC0VLvRmwKAescyabrSU6uepXzDJNnUu3S+Widyx/J1Oy+1SO4wHad2Il1FIEqPlRau6eAU4+HObXlgzQRQHVct1XaUH5iEdj7ZV5w9bXomyB0LpYjsxu1mJnn2QN1FSikXptMIegqdtIqmpisbGSa50AuiYs60v+/ekmEiOezJtAdrWArS3QK16Lvo4fT3OrFtD3/U3n6Zzt7XJ7WHbf6LPjyG/6ZfMEoyUr/XAMgAAAAASUVORK5CYII="};
 let lang='it';try{const q=new URLSearchParams(location.search).get('lang')||localStorage.getItem('hz-lang');if(q&&LANGS[q])lang=q;else{const n=(navigator.language||'').slice(0,2);if(LANGS[n])lang=n;else lang='en'}}catch(e){}
 let T=I18N[lang];
@@ -313,7 +470,7 @@ function loadBase(m){return new Promise(res=>{const im=new Image();im.onload=()=
 function paintArt(m){
   const c=document.getElementById('m'+m.id),cv=c&&c.querySelector('canvas.art');if(!cv||!m._base)return;
   const {w,h}=m.sprite,px=m._px,B=m._base,M=METRICS[metric],ctx=cv.getContext('2d'),img=ctx.createImageData(w,h),D=img.data;
-  const cols=m.rows.map(r=>rgb(heat(lvl(vals(m,r)[metric],M.phys))));
+  const cols=m.rows.map((r,i)=>rgb(heat(m._zl?m._zl(i):lvl(vals(m,r)[metric],M.phys))));
   const out=rgb('var(--outline)'),hz=hlZone[m.id];
   for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=y*w+x,v=px[i],o=i*4;
     if(v===255){const n=(x>0&&px[i-1]!==255)||(x<w-1&&px[i+1]!==255)||(y>0&&px[i-w]!==255)||(y<h-1&&px[i+w]!==255);
@@ -336,19 +493,28 @@ function focusZone(id,z){
 }
 function stars(v){const n=lvl(v,0);return '★'.repeat(n)+'<i>'+'★'.repeat(4-n)+'</i>'}
 function paint(m){
-  const c=document.getElementById('m'+m.id),M=METRICS[metric];
-  c.querySelectorAll('line.f').forEach(l=>l.setAttribute('stroke',heat(lvl(vals(m,m.rows[+l.dataset.z])[metric],M.phys))));
-  c.querySelectorAll('.zc').forEach(z=>{const r=m.rows[+z.dataset.i],v=vals(m,r),L=lvl(v[metric],M.phys);
+  const c=document.getElementById('m'+m.id),M=METRICS[metric],cf=cfg(m),D=cf.on?m.rows.map(r=>calcHit(cf,vals(m,r))):null;
+  const zl=i=>D?relLvl(D[i].tot,D):lvl(vals(m,m.rows[i])[metric],M.phys);m._zl=zl;
+  c.querySelectorAll('line.f').forEach(l=>l.setAttribute('stroke',heat(zl(+l.dataset.z))));
+  c.querySelectorAll('.zc').forEach(z=>{const i=+z.dataset.i,r=m.rows[i],v=vals(m,r),L=zl(i);
     z.style.setProperty('--zb',heat(L));z.style.setProperty('--zf',`var(--hf${L})`);
-    z.innerHTML=`<span class="zn">${ZL(r.label)}</span><span class="zv">${v[metric]}</span><span class="zs">${T.physL[0]}${v[0]} ${T.physL[1]}${v[1]} ${T.physL[2]}${v[2]}</span>`});
+    z.innerHTML=D?`<span class="zn">${ZL(r.label)}</span><span class="zv">${fmtN(D[i].tot)}</span><span class="zs">${CT().phys} ${fmtN(D[i].p)} · ${CT().el} ${fmtN(D[i].e)}</span>`
+      :`<span class="zn">${ZL(r.label)}</span><span class="zv">${v[metric]}</span><span class="zs">${T.physL[0]}${v[0]} ${T.physL[1]}${v[1]} ${T.physL[2]}${v[2]}</span>`});
   paintArt(m);
+  const th=c.querySelector('.tbl thead');th.innerHTML=D?calcHead():hzHead();
   const tb=c.querySelector('.tbl tbody');tb.innerHTML='';
-  m.rows.forEach((r,i)=>{const v=vals(m,r);const tr=el('tr');tr.append(el('td',{},ZL(r.label)));
+  if(D){m.rows.forEach((r,i)=>{const d=D[i],tr=el('tr');tr.append(el('td',{},ZL(r.label)));
+      tr.append(el('td',{class:'c'},fmtN(d.p)),el('td',{class:'c sep'},fmtN(d.e)));
+      const tt=el('td',{class:'c sep'});tt.style.background=heat(relLvl(d.tot,D));tt.style.color=`var(--hf${relLvl(d.tot,D)})`;
+      tt.innerHTML=`<b>${fmtN(d.tot)}</b>`+(d.lo!==d.hi?`<span class="lohi">${d.lo}–${d.hi}</span>`:'');tr.append(tt);
+      tr.append(el('td',{class:'sep'},vals(m,r)[8]?String(vals(m,r)[8]):'–'));
+      tr.onpointerenter=()=>focusZone(m.id,i);tr.onpointerleave=()=>focusZone(m.id,null);tb.append(tr)});}
+  else m.rows.forEach((r,i)=>{const v=vals(m,r);const tr=el('tr');tr.append(el('td',{},ZL(r.label)));
     v.slice(0,8).forEach((x,k)=>{const td=el('td',{class:'c'+(k===3?' sep':'')},String(x));
       if(k===metric)td.style.background=heat(lvl(x,k<3));tr.append(td)});
     tr.append(el('td',{class:'sep'},v[8]?String(v[8]):'–'));
     tr.onpointerenter=()=>focusZone(m.id,i);tr.onpointerleave=()=>focusZone(m.id,null);tb.append(tr)});
-  c.querySelector('.tbl thead').querySelectorAll('th').forEach((th,k)=>th.style.color=k-1===metric?'var(--ink)':'');
+  if(!D)th.querySelectorAll('th').forEach((h,k)=>h.style.color=k-1===metric?'var(--ink)':'');
   const W=c.querySelector('.elist');W.innerHTML='';
   const best=METRICS.slice(3).map(E=>{let bv=-1,bz=[];m.rows.forEach(r=>{const x=vals(m,r)[E.k];if(x>bv){bv=x;bz=[ZL(r.label)]}else if(x===bv)bz.push(ZL(r.label))});return{E,bv,bz}})
     .sort((a,b)=>b.bv-a.bv);
@@ -386,6 +552,124 @@ function trapTable(m){
   for(let n=1;n<=N;n++){h+=`<tr><td>${T.ord(n,n===N)}</td>`+cols.map(c=>c.sub.map(([,b],i)=>`<td${i===0?' class="sep"':''}>${secN(at(b,c.S,n))}</td>`).join('')).join('')+'</tr>'}
   const t=el('div',{class:'tbl'});t.innerHTML=h+'</tbody></table>';w.append(t);return w;
 }
+function hzHead(){return `<tr><th>${T.zone}</th>${METRICS.slice(0,3).map(E=>`<th title="${E.n}">${E.a}</th>`).join('')}${METRICS.slice(3).map((E,i)=>`<th${i===0?' class="sep"':''} title="${E.n}"><span class="dot" style="--c:var(${E.c})"></span>${E.a}</th>`).join('')}<th class="sep">${T.ko}</th></tr>`}
+function calcHead(){const C=CT();return `<tr><th>${T.zone}</th><th>${C.phys}</th><th class="sep">${C.el}</th><th class="sep" title="${C.avg}">${C.total}</th><th class="sep">${T.ko}</th></tr>`}
+/* ---- damage calculator (formula from hit_damage_em / pl_act.cpp, see calc-data.js) ---- */
+const CT=()=>CALC_I18N[lang];
+const CDEF={mode:'blade',gatk:120,gaff:0,am:0,rf:0,band:0,nu:false,pu:false,peu:false,bomb:false,on:false,w:'gs',mv:0,atk:480,sh:3,aff:0,el:0,ev:0,atkS:0,ce:3,elS:0,hpS:0,fort:0,draw:false,charm:false,talon:false,extra:0,sp:0,ph:0,q:1,sleep:false,trap:false};
+let CS={shared:false,g:{...CDEF},per:{}};
+try{const q=JSON.parse(localStorage.getItem('hz-calc'));if(q&&q.g)CS={shared:!!q.shared,g:{...CDEF,...q.g},per:Object.fromEntries(Object.entries(q.per||{}).map(([k,v])=>[k,{...CDEF,...v}]))}}catch(e){}
+const saveCS=()=>{try{localStorage.setItem('hz-calc',JSON.stringify(CS))}catch(e){}};
+function cfg(m){if(CS.shared)return CS.g;return CS.per[m.id]||(CS.per[m.id]={...CDEF})}
+const tr_=Math.trunc;
+function atkRate(c,disp,mult){
+  let a=Math.round(disp*100/mult)+(c.charm?6:0)+(c.talon?9:0)+(+c.extra||0)+[0,10,15,20,-5,-10,-15][c.atkS];
+  if(c.hpS==1)a=tr_(a*1.3);else if(c.hpS==2)a=tr_(a*0.7);
+  if(c.fort==2)a=tr_(a*1.2);else if(c.fort==1)a=tr_(a*1.1);
+  return Math.max(1,Math.min(700,a))/100;
+}
+const clamp8=x=>{x=tr_(x);return x<1?1:x>255?255:x};
+/* bowgun shot: quest_data.rso shell006 (RSO 0x2559c), then hit_damage_em with the Shot hitzone */
+function calcGun(c,v){
+  const G=CALC.gun,am=G.ammo[c.am]||G.ammo[0],[k,mv,elx,ev0,type,tbl]=am;
+  const R=G.rapid[k],scale=(c.rf>0&&R&&R[c.rf-1])?R[c.rf-1][1]/100:1;
+  let f0=atkRate(c,+c.gatk||1,G.mult)*scale;
+  if(c.bomb)f0*=1.05;
+  if(type==='N'&&c.nu)f0*=1.1;if(type==='P'&&c.pu)f0*=1.1;if(type==='S'&&c.peu)f0*=1.3;
+  let ev=ev0;
+  if(tbl){const T=G.tables[tbl],fb=T[Math.min(c.band,T.length-1)];f0*=fb;if(ev)ev=clamp8(ev*fb)}
+  const es=c.elS==1?1.2:c.elS==2?0.85:1;
+  if(type==='E')ev=clamp8(ev*f0*es);else if(type==='D')ev=clamp8(ev*scale*es);
+  let aff=(+c.gaff||0)+[-15,-10,-5,0,10,20,30][c.ce];aff=Math.max(-100,Math.min(100,aff));
+  const cut=type==='X'?1:v[2]/100,e=elx?ev*v[2+elx]/100:0,f=(+c.q||1)*(c.sleep?3:c.trap?1.1:1);
+  const one=m=>{const L=mv?clamp8(mv*m):0,p=L*cut,x=p+e;let t=(x>0&&x<1)?1:tr_(x);if(t>0){t=tr_(t*f);if(t<1)t=1}return{p:p*f,t}};
+  const n=one(f0),q=aff>0?one(f0*1.25):aff<0?one(f0*0.5):n,pr=Math.abs(aff)/100;
+  return{p:n.p*(1-pr)+q.p*pr,e:e*f,tot:n.t*(1-pr)+q.t*pr,lo:Math.min(n.t,q.t),hi:Math.max(n.t,q.t)};
+}
+function calcHit(c,v){
+  if(c.mode==='gun')return calcGun(c,v);
+  const W=CALC.weapons[c.w],mvE=W.moves[c.mv]||W.moves[0];
+  const rate=atkRate(c,c.atk,W.mult);
+  let life=mvE[2];
+  if(c.w==='ls'&&c.sp)life=tr_(life*[1,1.05,1.1,1.3][c.sp]);
+  if(c.w==='swaxe'&&c.ph==1)life=tr_(life*1.25);
+  let eb=tr_((+c.ev||0)/10);
+  if(c.elS==1)eb=tr_(eb*1.2);else if(c.elS==2)eb=tr_(eb*0.85);
+  if(c.w==='swaxe'&&c.ph==2)eb=tr_(eb*1.25);
+  let aff=(+c.aff||0)+[-15,-10,-5,0,10,20,30][c.ce]+((+c.aff||0)>0?CALC.sharpAff[c.sh]:0);
+  if(c.draw)aff=100;aff=Math.max(-100,Math.min(100,aff));if(c.sh<1)aff=0;
+  const cut=CALC.sharpRaw[c.sh]*(W.blunt?v[1]:v[0])/100;
+  const e=c.el?CALC.sharpEl[c.sh]*eb*v[2+c.el]/100:0;
+  const f=(+c.q||1)*(c.sleep?3:c.trap?1.1:1);
+  const one=L=>{const p=rate*L*cut,x=p+e;let t=(x>0&&x<1)?1:tr_(x);if(t>0){t=tr_(t*f);if(t<1)t=1}return{p:p*f,t}};
+  const n=one(life),k=aff>0?one(tr_(life*1.25)):aff<0?one(Math.max(1,tr_(life*0.75))):n,pr=Math.abs(aff)/100;
+  return{p:n.p*(1-pr)+k.p*pr,e:e*f,tot:n.t*(1-pr)+k.t*pr,lo:Math.min(n.t,k.t),hi:Math.max(n.t,k.t)};
+}
+function relLvl(x,D){const mx=Math.max(...D.map(d=>d.tot));if(!mx)return 0;const q=x/mx;return q>=.9?4:q>=.75?3:q>=.55?2:q>=.35?1:0}
+const fmtN=x=>{const r=Math.round(x*10)/10;return (Number.isInteger(r)?String(r):r.toFixed(1)).replace('.',lang==='en'?'.':',')};
+function seqTxt(q){const C=CT();return (q||'').replace(/\{(\w)\}/g,(_,k)=>C.seq[k])}
+function mvLabel(w,mvE){const C=CT();return seqTxt(mvE[4])+' — '+C.mv[mvE[0]]+(mvE[1]?(mvE[0]==='spirit3'?C.hit(mvE[1]):mvE[0]==='spirit'?' '+mvE[1]:C.lv(mvE[1])):'')+' ('+mvE[2]+')'}
+function calcPanel(m){
+  const C=CT(),P=el('aside',{class:'calc','aria-label':C.title});P.dataset.id=m.id;
+  const id=k=>`c${m.id}-${k}`;
+  const sel=(k,opts,lab)=>{const s=el('select',{id:id(k),'data-k':k});opts.forEach(([v,t])=>s.append(el('option',{value:String(v)},t)));return lab?el('label',{},lab,s):s};
+  const num=(k,lab,a={})=>el('label',{},lab,el('input',{type:'number',id:id(k),'data-k':k,...a}));
+  const ck=(k,lab)=>el('label',{class:'ck'},el('input',{type:'checkbox',id:id(k),'data-k':k}),lab);
+  const fs=(lg,...ch)=>{const f=el('fieldset');f.append(el('legend',{},lg),...ch);return f};
+  P.append(el('h3',{},C.title));
+  const tg=el('div',{class:'tg'});tg.append(ck('on',C.show),ck('shared',C.all));P.append(tg);
+  const md=el('div',{class:'mode',role:'radiogroup','aria-label':C.weapon});
+  [['blade',C.modeB],['gun',C.modeG]].forEach(([v,t])=>{const b=el('button',{type:'button',role:'radio','data-mode':v},t);
+    b.onclick=()=>{const c=cfg(m);c.mode=v;c.on=true;saveCS();(CS.shared?DATA:[m]).forEach(x=>{syncPanel(x);paint(x)})};md.append(b)});
+  P.append(md);
+  const mvSel=el('select',{id:id('mv'),'data-k':'mv'});
+  const gf=fs(C.gunW,el('label',{},C.ammo,el('select',{id:id('am'),'data-k':'am'})),
+    el('div',{class:'row2'},num('gatk',C.gatk,{min:'1',max:'3000',step:'1'}),num('gaff',C.aff,{min:'-100',max:'100',step:'5'})),
+    el('label',{},C.rapid,el('select',{id:id('rf'),'data-k':'rf'})),el('label',{},C.band,el('select',{id:id('band'),'data-k':'band'})));
+  gf.classList.add('gunOnly');P.append(gf);
+  P.append(fs(C.weapon,sel('w',Object.keys(CALC.weapons).map(k=>[k,C.wnames[k]]),C.weapon),el('label',{},C.move,mvSel),
+    el('div',{class:'row2'},num('atk',C.attack,{min:'1',max:'3000',step:'1'}),num('aff',C.aff,{min:'-100',max:'100',step:'5'})),
+    sel('sh',C.sharpN.map((t,i)=>[i,t]),C.sharp),
+    el('div',{class:'row2'},sel('el',[[0,C.none],...OFFICIAL.el[lang].map((t,i)=>[i+1,t])],C.elem),num('ev',C.elemVal,{min:'0',max:'990',step:'10'})),
+    sel('sp',C.spS.map((t,i)=>[i,t]),C.spiritLv),sel('ph',[[0,C.none],[1,C.phPow],[2,C.phEl]],C.phial)));
+  P.lastChild.classList.add('bladeOnly');
+  P.append(fs(C.skills,sel('atkS',C.atkS.map((t,i)=>[i,t]),C.atkSkill),
+    sel('ce',[-3,-2,-1,0,1,2,3].map((n,i)=>[i,n?`${C.critEye} ${n>0?'+':''}${n} (${['−15','−10','−5','',' +10',' +20',' +30'][i]}%)`.replace('( ','('):C.none]),C.critEye),
+    sel('elS',C.elS.map((t,i)=>[i,t]),C.elSkill),sel('hpS',C.hpS.map((t,i)=>[i,t]),C.hp),
+    sel('fort',[0,1,2].map(n=>[n,C.faints(n)]),C.fortify),ck('draw',C.draw),
+    ...[['nu',51],['pu',52],['peu',53],['bomb',67]].map(([k,i])=>{const l=ck(k,CALC.gun.skills[i][lang]);l.classList.add('gunOnly');return l})));
+  P.querySelector('[data-k="draw"]').closest('label').classList.add('bladeOnly');
+  P.append(fs(C.items,ck('charm',C.charm),ck('talon',C.talon),num('extra',C.extraAtk,{min:'0',max:'100',step:'1'})));
+  P.append(fs(C.monster,num('q',C.questRate,{min:'0.1',max:'5',step:'0.05'}),ck('sleep',C.sleep),ck('trap',C.trap)));
+  P.append(el('p',{class:'note bladeOnly'},C.keys),el('p',{class:'note bladeOnly'},C.note),el('p',{class:'note gunOnly'},C.noteGun));
+  P.addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;
+    if(k==='shared'){const cur=cfg(m);CS.shared=e.target.checked;if(CS.shared)CS.g={...cur};else DATA.forEach(x=>CS.per[x.id]={...CS.g});saveCS();DATA.forEach(x=>{syncPanel(x);paint(x)});return}
+    const c=cfg(m),t=e.target;
+    c[k]=t.type==='checkbox'?t.checked:(['w'].includes(k)?t.value:+t.value);
+    if(k==='w'){c.mv=0;c.atk=Math.round(100*CALC.weapons[c.w].mult/100)}
+    if(k==='am'){c.rf=0;c.band=0}
+    if(k!=='on')c.on=true;
+    saveCS();(CS.shared?DATA:[m]).forEach(x=>{syncPanel(x);paint(x)})});
+  return P;
+}
+function syncPanel(m){
+  const P=document.querySelector(`.calc[data-id="${m.id}"]`);if(!P)return;const c=cfg(m),C=CT(),W=CALC.weapons[c.w];
+  const ms=P.querySelector('[data-k="mv"]');ms.innerHTML='';
+  [[0,C.land],[1,C.water]].forEach(([w,lab])=>{const g=el('optgroup',{label:lab});W.moves.forEach((mv,i)=>{if((mv[3]||0)===w)g.append(el('option',{value:String(i)},mvLabel(c.w,mv)))});if(g.children.length)ms.append(g)});
+  P.querySelectorAll('[data-k]').forEach(x=>{const k=x.dataset.k;const v=k==='shared'?CS.shared:c[k];if(x.type==='checkbox')x.checked=!!v;else x.value=String(v)});
+  const gun=c.mode==='gun',G=CALC.gun;
+  P.querySelectorAll('.mode button').forEach(b=>b.setAttribute('aria-checked',String(b.dataset.mode===(gun?'gun':'blade'))));
+  P.querySelectorAll('.gunOnly').forEach(x=>x.hidden=!gun);P.querySelectorAll('.bladeOnly').forEach(x=>x.hidden=gun);
+  const as=P.querySelector('[data-k="am"]');as.innerHTML='';
+  [[1,C.land],[2,C.water]].forEach(([w,lab])=>{const g=el('optgroup',{label:lab});G.ammo.forEach((a,i)=>{if(a[6]===0||a[6]===w)g.append(el('option',{value:String(i)},G.names[a[0]][lang]+' ('+a[1]+(a[2]?' + '+OFFICIAL.el[lang][a[2]-1]+' '+a[3]:'')+')'))});as.append(g)});
+  as.value=String(c.am);const am=G.ammo[c.am]||G.ammo[0];
+  const rs=P.querySelector('[data-k="rf"]');rs.innerHTML='';rs.append(el('option',{value:'0'},C.rapidNone));
+  (G.rapid[am[0]]||[]).forEach(([n,pc],i)=>rs.append(el('option',{value:String(i+1)},C.rapidN(n,pc))));rs.value=String(c.rf);rs.closest('label').hidden=!gun||!G.rapid[am[0]];
+  const bs=P.querySelector('[data-k="band"]');bs.innerHTML='';
+  if(am[5])G.tables[am[5]].forEach((x,i)=>bs.append(el('option',{value:String(i)},(i+1)+' (×'+fmtN(x)+')')));bs.value=String(c.band);bs.closest('label').hidden=!gun||!am[5];
+  P.querySelector('[data-k="sp"]').closest('label').hidden=gun||c.w!=='ls';
+  P.querySelector('[data-k="ph"]').closest('label').hidden=gun||c.w!=='swaxe';
+}
 function card(m){
   const c=el('article',{class:'card',id:'m'+m.id});
   const left=el('div');
@@ -409,12 +693,12 @@ function card(m){
     [T.normal,AL[0]].forEach((t,i)=>{const b=el('button',{type:'button','aria-pressed':i===(altOn[m.id]?1:0)},t);b.onclick=()=>{altOn[m.id]=!!i;g.querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-pressed',j===i));paint(m)};g.append(b)});
     a.append(g,el('span',{},AL[1]));right.append(a)}
   const t=el('div',{class:'tbl'});
-  t.innerHTML=`<table><thead><tr><th>${T.zone}</th>${METRICS.slice(0,3).map(E=>`<th title="${E.n}">${E.a}</th>`).join('')}${METRICS.slice(3).map((E,i)=>`<th${i===0?' class="sep"':''} title="${E.n}"><span class="dot" style="--c:var(${E.c})"></span>${E.a}</th>`).join('')}<th class="sep">${T.ko}</th></tr></thead><tbody></tbody></table>`;
+  t.innerHTML='<table><thead></thead><tbody></tbody></table>';
   right.append(t);
   const w=el('div',{class:'weak'});w.append(el('h3',{},T.weak),el('div',{class:'el elist'}));
   const wt=el('div',{class:'wt'});wt.append(w,trapTable(m));right.append(wt);
   const ex=el('div',{class:'extra'});ex.append(ailTable(m));
-  c.append(left,right,ex);return c;
+  c.append(left,right,calcPanel(m),ex);return c;
 }
 const J=document.getElementById('jump'),G=document.getElementById('grid');
 DATA.forEach(m=>{m._px=unrle(m.sprite);loadBase(m).then(()=>paintArt(m))});
@@ -427,7 +711,7 @@ function render(){
   $('tintOn').textContent=T.tintOn;$('tintOff').textContent=T.tintOff;$('tintg').setAttribute('aria-label',T.drawing);J.setAttribute('aria-label',T.monsters);
   buildMetric();legend();J.innerHTML='';G.innerHTML='';
   [...DATA].sort((a,b)=>MN(a).localeCompare(MN(b),LOCALE[lang])).forEach(m=>{J.append(el('a',{href:'#m'+m.id},MN(m)));G.append(card(m))});
-  hlZone={};paintAll();
+  DATA.forEach(syncPanel);hlZone={};paintAll();
 }
 const LS=document.getElementById('lang');
 Object.entries(LANGS).forEach(([k,v])=>{const o=el('option',{value:k},v);if(k===lang)o.selected=true;LS.append(o)});
